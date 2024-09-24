@@ -1,6 +1,6 @@
 import React from "react";
 import { Todo } from "./Component/Todo";
-import Addtodo from "./Component/addtodo";
+import Addtodo from "./Component/Addtodo";
 
 const App = () => {
   return (
