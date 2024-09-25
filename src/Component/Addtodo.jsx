@@ -1,16 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addTodo } from "../Reducers/todoSlice";
+import { addTodo, setTodos } from "../Reducers/todoSlice";
 
 const Addtodo = () => {
   const [Input, setInput] = useState("");
   const todos = useSelector((state) => state.todos);
-  const checktodos = todos.find((item) => item.text === Input);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const savedTodos = JSON.parse(localStorage.getItem("Todos"));
+    if (savedTodos && savedTodos.length > 0) {
+      dispatch(setTodos(savedTodos));
+    }
+  }, [dispatch]);
+  useEffect(() => {
+    if (todos.length > 0) {
+      localStorage.setItem("Todos", JSON.stringify(todos));
+    }
+  }, [todos]);
+
   const handleaddTodo = (e) => {
     e.preventDefault();
-    !checktodos ? dispatch(addTodo(Input)) : alert("Already  add in Todo");
-    setInput("");
+    const checktodos = todos.find((item) => item.text === Input);
+
+    if (!checktodos && Input.trim() !== "") {
+      dispatch(addTodo(Input)); // Dispatch addTodo action to add the new todo
+      setInput(""); // Clear the input after adding
+    } else {
+      alert("This todo is already added or the input is empty.");
+    }
   };
 
   return (
